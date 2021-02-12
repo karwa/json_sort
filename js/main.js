@@ -15,13 +15,20 @@ function isJson(str) {
   return true;
 }
 
+var ordering = {}, // map for efficient lookup of sortIndex
+sortOrder = ['input', 'base', 'href', 'origin', 'protocol', 'username', 'password', 'host', 'hostname', 'port', 'pathname', 'search', 'hash', 'failure'];
+for (var i=0; i<sortOrder.length; i++)
+  ordering[sortOrder[i]] = i;
+
 /**
  * @name objectKeys
  * @param {Object} object
  * @returns {Array.<string>}
  */
 function objectKeys(object) {
-  return Object.keys(object).sort((alpha, beta) => alpha.localeCompare(beta));
+  return Object.keys(object).sort( function(a, b) {
+      return (ordering[a] - ordering[b]) || a.localeCompare(b);
+  });
 }
 
 /**
